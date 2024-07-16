@@ -1,5 +1,4 @@
 import { stripe } from '@/lib/stripe'
-import { error } from 'console'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(

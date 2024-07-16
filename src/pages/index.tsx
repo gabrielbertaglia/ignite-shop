@@ -1,12 +1,12 @@
 import { HomeContainer, Product, SliderContainer } from '@/styles/pages/home'
 import Image from 'next/image'
 
-import { useKeenSlider } from 'keen-slider/react'
-
-import 'keen-slider/keen-slider.min.css'
 import { stripe } from '@/lib/stripe'
 import { GetStaticProps } from 'next'
 import Stripe from 'stripe'
+import useEmblaCarousel from 'embla-carousel-react'
+import Link from 'next/link'
+import { CartButton } from '@/components/cart-button'
 
 interface HomeProps {
   products: {
@@ -18,35 +18,48 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
-  const [sliderRef] = useKeenSlider({
-    slides: {
-      perView: 2.25,
-      spacing: 48,
-    },
+  const [emblaRef] = useEmblaCarousel({
+    align: 'center',
+    skipSnaps: false,
+    dragFree: true,
   })
 
   return (
-    <HomeContainer>
-      <SliderContainer ref={sliderRef} className="keen-slider">
-        {products.map((product) => {
-          return (
-            <Product
-              key={product.id}
-              href={`product/${product.id}`}
-              className="keen-slider__slide"
-              prefetch={false}
-            >
-              <Image src={product.imageUrl} alt="" width={520} height={480} />
+    <div style={{ overflow: 'hidden', width: '100%' }}>
+      <HomeContainer>
+        <div className="embla" ref={emblaRef}>
+          <SliderContainer className="embla__container container">
+            <>
+              {products.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`product/${product.id}`}
+                  className="keen-slider__slide"
+                  prefetch={false}
+                >
+                  <Product className="embla__slide">
+                    <Image
+                      src={product.imageUrl}
+                      alt=""
+                      width={520}
+                      height={480}
+                    />
 
-              <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
-              </footer>
-            </Product>
-          )
-        })}
-      </SliderContainer>
-    </HomeContainer>
+                    <footer>
+                      <div>
+                        <strong>{product.name}</strong>
+                        <span>{product.price}</span>
+                      </div>
+                      <CartButton color={'green'} size="large" />
+                    </footer>
+                  </Product>
+                </Link>
+              ))}
+            </>
+          </SliderContainer>
+        </div>
+      </HomeContainer>
+    </div>
   )
 }
 

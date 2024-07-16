@@ -1,25 +1,28 @@
-import Link from 'next/link'
 import { styled } from '..'
 
 export const SliderContainer = styled('div', {
-  minHeight: 656,
-  maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
+  display: 'flex',
+  gap: '3rem',
+  margin: '0 auto',
+  '.embla__slide': {
+    minWidth: '43.5rem',
+  },
 })
 
 export const HomeContainer = styled('main', {
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
+  width: '100%',
+  maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
   marginLeft: 'auto',
 })
 
-export const Product = styled(Link, {
+export const Product = styled('div', {
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
   borderRadius: 8,
-  cursor: 'pointer',
   position: 'relative',
+  cursor: 'pointer',
   overflow: 'hidden',
-  minWidth: 540,
+  width: '100%',
+  minHeight: 656,
 
   display: 'flex',
   alignItems: 'center',
@@ -47,6 +50,12 @@ export const Product = styled(Link, {
     transform: 'translateY(110%)',
     opacity: 0,
     transition: '0.2s',
+
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4,
+    },
 
     strong: {
       fontSize: '$lg',
