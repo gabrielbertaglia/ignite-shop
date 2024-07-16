@@ -1,4 +1,4 @@
-import { HomeContainer, Product } from '@/styles/pages/home'
+import { HomeContainer, Product, SliderContainer } from '@/styles/pages/home'
 import Image from 'next/image'
 
 import { useKeenSlider } from 'keen-slider/react'
@@ -26,24 +26,26 @@ export default function Home({ products }: HomeProps) {
   })
 
   return (
-    <HomeContainer ref={sliderRef} className="keen-slider">
-      {products.map((product) => {
-        return (
-          <Product
-            key={product.id}
-            href={`product/${product.id}`}
-            className="keen-slider__slide"
-            prefetch={false}
-          >
-            <Image src={product.imageUrl} alt="" width={520} height={480} />
+    <HomeContainer>
+      <SliderContainer ref={sliderRef} className="keen-slider">
+        {products.map((product) => {
+          return (
+            <Product
+              key={product.id}
+              href={`product/${product.id}`}
+              className="keen-slider__slide"
+              prefetch={false}
+            >
+              <Image src={product.imageUrl} alt="" width={520} height={480} />
 
-            <footer>
-              <strong>{product.name}</strong>
-              <span>{product.price}</span>
-            </footer>
-          </Product>
-        )
-      })}
+              <footer>
+                <strong>{product.name}</strong>
+                <span>{product.price}</span>
+              </footer>
+            </Product>
+          )
+        })}
+      </SliderContainer>
     </HomeContainer>
   )
 }

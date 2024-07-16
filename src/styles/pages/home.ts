@@ -1,12 +1,16 @@
 import Link from 'next/link'
 import { styled } from '..'
 
-export const HomeContainer = styled('main', {
-  display: 'flex',
-  width: '100%',
-  maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
-  marginLeft: 'auto',
+export const SliderContainer = styled('div', {
   minHeight: 656,
+  maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
+})
+
+export const HomeContainer = styled('main', {
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  marginLeft: 'auto',
 })
 
 export const Product = styled(Link, {
