@@ -1,43 +1,29 @@
 import { SkeletonProductId } from '@/components/skeleton-product-id'
+import { IProduct } from '@/context/CartContext'
+import { useCart } from '@/hooks/useCart'
 import { stripe } from '@/lib/stripe'
 import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
 } from '@/styles/pages/product'
-import axios from 'axios'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Stripe from 'stripe'
 
 interface ProductProps {
-  product: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-    description: string
-    defaultPrice: string
-  }
+  product: IProduct
 }
 
 export default function Product({ product }: ProductProps) {
   const { isFallback } = useRouter()
+  const { addToCart, checkIfItemAlreadyExists } = useCart()
 
-  async function handleBuyProduct() {
-    try {
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPrice,
-      })
+  console.log(product)
 
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
-      alert('Falha ao redirecionar ao checkout!')
-    }
+  function handleAddToCart() {
+    addToCart(product)
   }
 
   if (isFallback) {
@@ -56,7 +42,12 @@ export default function Product({ product }: ProductProps) {
 
         <p>{product.description}</p>
 
-        <button onClick={handleBuyProduct}>Comprar agora</button>
+        <button
+          onClick={handleAddToCart}
+          disabled={checkIfItemAlreadyExists(product.id)}
+        >
+          Colocar na sacola
+        </button>
       </ProductDetails>
     </ProductContainer>
   )
@@ -97,7 +88,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         }).format(Number(price.unit_amount) / 100),
         imageUrl: product.images[0],
         description: product.description,
-        defaultPrice: price.id,
+        totalPrice: Number(price.unit_amount) / 100,
+        defaultPriceId: price.id,
       },
     },
     revalidate: 60 * 60 * 1,
