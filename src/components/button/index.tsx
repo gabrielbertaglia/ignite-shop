@@ -1,13 +1,13 @@
-import { ComponentProps } from 'react'
+import React, { ComponentProps } from 'react'
+
 import { ButtonContainer } from './styles'
 
 type ButtonProps = ComponentProps<'button'>
 
-export function Button({ children }: ButtonProps) {
-  // { children, ...rest }
+export function Button({ children, onClick, ...props }: ButtonProps) {
   return (
-    <>
-      <ButtonContainer>{children}</ButtonContainer>
-    </>
+    <ButtonContainer type="button" onClick={onClick} {...props}>
+      {children}
+    </ButtonContainer>
   )
 }

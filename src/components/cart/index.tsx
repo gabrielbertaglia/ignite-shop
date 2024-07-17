@@ -14,14 +14,18 @@ import {
   Checkout,
   CheckoutDetails,
   CartProductDetails,
+  Button,
 } from './styles'
 import { CartButton } from '../cart-button'
 import Image from 'next/image'
-import { Button } from '../button'
+// import { Button } from '../button'
 import { useCart } from '@/hooks/useCart'
+import axios from 'axios'
+import { useState } from 'react'
 
 export function Cart() {
   const { cartItems, cartTotal, removeToCart } = useCart()
+  const [isCheckoutSession, setIsCheckoutSession] = useState(false)
 
   const cartQuantity = cartItems.length
 
@@ -29,6 +33,25 @@ export function Cart() {
     style: 'currency',
     currency: 'BRL',
   }).format(cartTotal)
+
+  async function handleCheckout() {
+    console.log('clicando')
+    try {
+      setIsCheckoutSession(true)
+
+      const response = await axios.post('/api/checkout', {
+        products: cartItems,
+      })
+
+      const { checkoutUrl } = response.data
+
+      window.location.href = checkoutUrl
+    } catch (error) {
+      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+      setIsCheckoutSession(false)
+      alert('Falha ao redirecionar ao checkout!')
+    }
+  }
 
   return (
     <Root>
@@ -83,7 +106,9 @@ export function Cart() {
                 <h3>{formattedCartTotal}</h3>
               </div>
             </CheckoutDetails>
-            <Button>Finalizar Compra</Button>
+            <Button onClick={handleCheckout} disabled={isCheckoutSession}>
+              Finalizar Compra
+            </Button>
           </Checkout>
         </CartContent>
       </Portal>
