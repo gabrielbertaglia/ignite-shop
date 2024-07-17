@@ -14,11 +14,10 @@ import {
   Checkout,
   CheckoutDetails,
   CartProductDetails,
-  Button,
 } from './styles'
 import { CartButton } from '../cart-button'
 import Image from 'next/image'
-// import { Button } from '../button'
+import { Button } from '../button'
 import { useCart } from '@/hooks/useCart'
 import axios from 'axios'
 import { useState } from 'react'
@@ -56,7 +55,7 @@ export function Cart() {
   return (
     <Root>
       <Trigger asChild>
-        <CartButton />
+        <CartButton quantity={cartQuantity} />
       </Trigger>
       <Portal>
         <CartContent>

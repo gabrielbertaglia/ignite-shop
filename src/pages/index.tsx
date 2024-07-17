@@ -9,13 +9,30 @@ import Link from 'next/link'
 import { CartButton } from '@/components/cart-button'
 import { useCart } from '@/hooks/useCart'
 import { IProduct } from '@/context/CartContext'
-import { MouseEvent } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
+import { ProductSkeleton } from '@/components/product-skeleton'
+import Head from 'next/head'
 
 interface HomeProps {
   products: IProduct[]
 }
 
 export default function Home({ products }: HomeProps) {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    console.log('Setting timeout')
+    const timeOut = setTimeout(() => {
+      console.log('Timeout executed')
+      setIsLoading(false)
+    }, 2000)
+
+    return () => {
+      console.log('Clearing timeout')
+      clearTimeout(timeOut)
+    }
+  }, [])
+
   const [emblaRef] = useEmblaCarousel({
     align: 'center',
     skipSnaps: false,
@@ -33,46 +50,60 @@ export default function Home({ products }: HomeProps) {
   }
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%' }}>
-      <HomeContainer>
-        <div className="embla" ref={emblaRef}>
-          <SliderContainer className="embla__container container">
-            <>
-              {products.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`product/${product.id}`}
-                  className="keen-slider__slide"
-                  prefetch={false}
-                >
-                  <Product className="embla__slide">
-                    <Image
-                      src={product.imageUrl}
-                      alt=""
-                      width={520}
-                      height={480}
-                    />
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
+      <div style={{ overflow: 'hidden', width: '100%' }}>
+        <HomeContainer>
+          <div className="embla" ref={emblaRef}>
+            <SliderContainer className="embla__container container">
+              <>
+                {isLoading ? (
+                  <>
+                    <ProductSkeleton className="embla__slide" />
+                    <ProductSkeleton className="embla__slide" />
+                    <ProductSkeleton className="embla__slide" />
+                  </>
+                ) : (
+                  <>
+                    {products.map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`product/${product.id}`}
+                        prefetch={false}
+                      >
+                        <Product className="embla__slide">
+                          <Image
+                            src={product.imageUrl}
+                            alt=""
+                            width={520}
+                            height={480}
+                          />
 
-                    <footer>
-                      <div>
-                        <strong>{product.name}</strong>
-                        <span>{product.price}</span>
-                      </div>
-                      <CartButton
-                        color={'green'}
-                        disabled={checkIfItemAlreadyExists(product.id)}
-                        size="large"
-                        onClick={(e) => handleAddToCart(e, product)}
-                      />
-                    </footer>
-                  </Product>
-                </Link>
-              ))}
-            </>
-          </SliderContainer>
-        </div>
-      </HomeContainer>
-    </div>
+                          <footer>
+                            <div>
+                              <strong>{product.name}</strong>
+                              <span>{product.price}</span>
+                            </div>
+                            <CartButton
+                              color={'green'}
+                              disabled={checkIfItemAlreadyExists(product.id)}
+                              size="large"
+                              onClick={(e) => handleAddToCart(e, product)}
+                            />
+                          </footer>
+                        </Product>
+                      </Link>
+                    ))}
+                  </>
+                )}
+              </>
+            </SliderContainer>
+          </div>
+        </HomeContainer>
+      </div>
+    </>
   )
 }
 

@@ -2,12 +2,8 @@ import React, { ComponentProps } from 'react'
 
 import { ButtonContainer } from './styles'
 
-type ButtonProps = ComponentProps<'button'>
+type ButtonProps = ComponentProps<typeof ButtonContainer>
 
-export function Button({ children, onClick, ...props }: ButtonProps) {
-  return (
-    <ButtonContainer type="button" onClick={onClick} {...props}>
-      {children}
-    </ButtonContainer>
-  )
+export function Button({ children, ...props }: ButtonProps) {
+  return <ButtonContainer {...props}>{children}</ButtonContainer>
 }

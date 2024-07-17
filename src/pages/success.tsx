@@ -5,6 +5,7 @@ import {
   SuccessContainer,
 } from '@/styles/pages/success'
 import { GetServerSideProps } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import Stripe from 'stripe'
@@ -15,25 +16,32 @@ interface SuccessProps {
 }
 
 export default function Success({ customerName, productImage }: SuccessProps) {
-  console.log(productImage)
+  const quantityTShorts = productImage.length
+
   return (
-    <SuccessContainer>
-      <ImagesContainer>
-        {productImage.map((image, i) => (
-          <ImageContainer key={i}>
-            <Image alt="" src={image} width={120} height={110} />
-          </ImageContainer>
-        ))}
-      </ImagesContainer>
-      <h1>Compra efetuada!</h1>
+    <>
+      <Head>
+        <title>Success | Ignite Shop</title>
+      </Head>
+      <SuccessContainer>
+        <ImagesContainer>
+          {productImage.map((image, i) => (
+            <ImageContainer key={i}>
+              <Image alt="" src={image} width={120} height={110} />
+            </ImageContainer>
+          ))}
+        </ImagesContainer>
+        <h1>Compra efetuada!</h1>
 
-      <p>
-        Uhuul <strong>{customerName}</strong>, sua compra de{' '}
-        {productImage.length} camisetas já está a minho da sua casa.
-      </p>
+        <p>
+          Uhuul <strong>{customerName}</strong>, sua compra de {quantityTShorts}{' '}
+          {quantityTShorts === 1 ? 'camiseta' : 'camisetas'} já está a caminho
+          da sua casa.
+        </p>
 
-      <Link href="/">Voltar ao catálogo</Link>
-    </SuccessContainer>
+        <Link href="/">Voltar ao catálogo</Link>
+      </SuccessContainer>
+    </>
   )
 }
 

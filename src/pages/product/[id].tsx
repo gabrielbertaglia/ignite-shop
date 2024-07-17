@@ -1,4 +1,3 @@
-import { SkeletonProductId } from '@/components/skeleton-product-id'
 import { IProduct } from '@/context/CartContext'
 import { useCart } from '@/hooks/useCart'
 import { stripe } from '@/lib/stripe'
@@ -8,8 +7,8 @@ import {
   ProductDetails,
 } from '@/styles/pages/product'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import Stripe from 'stripe'
 
 interface ProductProps {
@@ -17,7 +16,6 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const { isFallback } = useRouter()
   const { addToCart, checkIfItemAlreadyExists } = useCart()
 
   console.log(product)
@@ -26,30 +24,31 @@ export default function Product({ product }: ProductProps) {
     addToCart(product)
   }
 
-  if (isFallback) {
-    return <SkeletonProductId />
-  }
-
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image alt="" src={product.imageUrl} width={520} height={480} />
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
+      <ProductContainer>
+        <ImageContainer>
+          <Image alt="" src={product.imageUrl} width={520} height={480} />
+        </ImageContainer>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
 
-        <p>{product.description}</p>
+          <p>{product.description}</p>
 
-        <button
-          onClick={handleAddToCart}
-          disabled={checkIfItemAlreadyExists(product.id)}
-        >
-          Colocar na sacola
-        </button>
-      </ProductDetails>
-    </ProductContainer>
+          <button
+            onClick={handleAddToCart}
+            disabled={checkIfItemAlreadyExists(product.id)}
+          >
+            Colocar na sacola
+          </button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
   )
 }
 
